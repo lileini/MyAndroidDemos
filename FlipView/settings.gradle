@@ -1,0 +1,2 @@
+include ':app', ':FlipLibrary'
+rootProject.name='FlipView'

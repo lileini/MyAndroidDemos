@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 
 /**
  * 中间的textview宽度自适应不能让后面的控件显示不出来
+ * 暂时没写margin这些
  */
 public class AutoMiddleLinearLayout extends LinearLayout {
     private static final String TAG = "AutoMiddleLinearLayout";
