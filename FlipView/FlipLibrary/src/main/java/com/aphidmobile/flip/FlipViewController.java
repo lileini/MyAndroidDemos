@@ -261,6 +261,10 @@ public class FlipViewController extends AdapterView<Adapter> {
     }
   }
 
+  public void forwardPage(boolean isForward){
+    cards.forwardPage(isForward);
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   // Orientation
   @Override
@@ -525,7 +529,8 @@ public class FlipViewController extends AdapterView<Adapter> {
             bufferedViews.addLast(viewFromAdapter(adapterIndex + sideBufferSize, true));
           }
           bufferIndex = bufferedViews.indexOf(old) + 1;
-          requestLayout();
+          // TODO: 19-10-12 tmp notation
+//          requestLayout();
           updateVisibleView(bufferIndex);
         }
       } else if (indexInAdapter == adapterIndex - 1) {
@@ -539,7 +544,8 @@ public class FlipViewController extends AdapterView<Adapter> {
             bufferedViews.addFirst(viewFromAdapter(adapterIndex - sideBufferSize, false));
           }
           bufferIndex = bufferedViews.indexOf(old) - 1;
-          requestLayout();
+          // TODO: 19-10-12 tmp notation
+//          requestLayout();
           updateVisibleView(bufferIndex);
         }
       } else {
@@ -582,15 +588,15 @@ public class FlipViewController extends AdapterView<Adapter> {
       if (onViewFlipListener != null) {
         onViewFlipListener.onViewFlipped(bufferedViews.get(bufferIndex), adapterIndex);
       }
-
-      handler.post(new Runnable() {
+      // TODO: 19-10-12 change to delay 200 
+      handler.postDelayed(new Runnable() {
         public void run() {
           if (!inFlipAnimation) {
             cards.setVisible(false);
             surfaceView.requestRender(); //ask OpenGL to clear its display
           }
         }
-      });
+      },200);
     }
   }
 

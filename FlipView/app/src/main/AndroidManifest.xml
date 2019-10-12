@@ -37,6 +37,7 @@
         <activity android:name=".FlipDynamicAdapterActivity"/>
         <activity android:name=".FlipWebViewActivity"/>
         <activity android:name=".Issue51Activity"/>
+        <activity android:name=".FlipCustomeActivity"/>
     </application>
 
 </manifest>

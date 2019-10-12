@@ -18,6 +18,7 @@ limitations under the License.
 package com.aphidmobile.flip;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 import com.aphidmobile.utils.TextureUtils;
@@ -30,6 +31,7 @@ import javax.microedition.khronos.opengles.GL10;
 import static com.aphidmobile.flip.FlipRenderer.checkError;
 
 public class ViewDualCards {
+  private static final String TAG = "ViewDualCards";
 
   private int index = -1;
   private WeakReference<View> viewRef;
@@ -57,6 +59,7 @@ public class ViewDualCards {
   }
 
   synchronized void resetWithIndex(int index) {
+    Log.d(TAG, "resetWithIndex: "+index);
     this.index = index;
     viewRef = null;
     recycleScreenshot();

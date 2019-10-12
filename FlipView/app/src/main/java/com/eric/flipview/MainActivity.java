@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.eric.flipview.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +64,7 @@ public class MainActivity extends ListActivity {
 
   private List<? extends Map<String, ?>> getData() {
     List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+    addItem(data, "custome", FlipCustomeActivity.class);
     addItem(data, "TextViews", FlipTextViewActivity.class);
     addItem(data, "Buttons", FlipButtonActivity.class);
     addItem(data, "Complex Layouts", FlipComplexLayoutActivity.class);

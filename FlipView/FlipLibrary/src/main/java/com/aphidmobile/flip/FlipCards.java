@@ -17,6 +17,7 @@ limitations under the License.
 
 package com.aphidmobile.flip;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,7 +31,9 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class FlipCards {
 
-  private static final float ACCELERATION = 0.65f;
+  private static final String TAG = "FlipCards";
+
+  private static final float ACCELERATION = 0.1f;//调节自动翻页速度
   private static final float MOVEMENT_RATE = 1.5f;
   private static final int MAX_TIP_ANGLE = 60;
   private static final int MAX_TOUCH_MOVE_ANGLE = 15;
@@ -180,6 +183,7 @@ public class FlipCards {
         float oldAngle = accumulatedAngle;
 
         accumulatedAngle += delta;
+        Log.d(TAG, "draw: animatedFrame= "+animatedFrame+",delta= "+delta+" ,forward= "+forward+",oldAngle= "+oldAngle+",accumulatedAngle= "+accumulatedAngle);
 
         if (oldAngle < 0) { //bouncing back after flip backward and over the first page
           Assert.assertTrue(forward);
@@ -335,12 +339,15 @@ public class FlipCards {
           int anglePageIndex = getPageIndexFromAngle(accumulatedAngle);
 
           if (accumulatedAngle >= 0) {
+            Log.d(TAG, "handleTouchEvent: anglePageIndex= "+anglePageIndex+",frontCards.getIndex() = "+frontCards.getIndex());
             if (anglePageIndex != frontCards.getIndex()) {
               if (anglePageIndex == frontCards.getIndex() - 1) { //moved to previous page
+                Log.d(TAG, "handleTouchEvent: moved to previous page");
                 swapCards(); //frontCards becomes the backCards
                 frontCards.resetWithIndex(backCards.getIndex() - 1);
                 controller.flippedToView(anglePageIndex, false);
               } else if (anglePageIndex == frontCards.getIndex() + 1) { //moved to next page
+                Log.d(TAG, "handleTouchEvent: moved to next page");
                 swapCards();
                 backCards.resetWithIndex(frontCards.getIndex() + 1);
                 controller.flippedToView(anglePageIndex, false);
@@ -362,6 +369,7 @@ public class FlipCards {
       case MotionEvent.ACTION_UP:
       case MotionEvent.ACTION_CANCEL:
         if (state == STATE_TOUCH) {
+          Log.d(TAG, "handleTouchEvent: accumulatedAngle="+accumulatedAngle);
           if (accumulatedAngle < 0) {
             forward = true;
           } else if (accumulatedAngle >= frontCards.getIndex() * 180
@@ -392,6 +400,33 @@ public class FlipCards {
       this.state = state;
       animatedFrame = 0;
     }
+  }
+
+  /**
+   *
+   * @param isForward
+   */
+  public void forwardPage(boolean isForward){
+    controller.showFlipAnimation();
+    forward = isForward;
+    if (!forward){
+      swapCards(); //frontCards becomes the backCards
+      frontCards.resetWithIndex(backCards.getIndex() - 1);
+      int anglePageIndex = getPageIndexFromAngle(accumulatedAngle);
+      controller.postFlippedToView(anglePageIndex-1/*, false*/);
+    }
+//    int anglePageIndex = getPageIndexFromAngle(accumulatedAngle);
+    /*if (!isForward) { //moved to previous page
+      swapCards(); //frontCards becomes the backCards
+      frontCards.resetWithIndex(backCards.getIndex() - 1);
+      controller.flippedToView(anglePageIndex, false);
+    } else { //moved to next page
+      swapCards();
+      backCards.resetWithIndex(frontCards.getIndex() + 1);
+      controller.flippedToView(anglePageIndex, false);
+    }*/
+    setState(STATE_AUTO_ROTATE);
+    controller.getSurfaceView().requestRender();
   }
 
   private int getPageIndexFromAngle(float angle) {
